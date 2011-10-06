@@ -25,8 +25,7 @@ src/bootstrap.js: $(uglifyjs) client/src/cell.js client/src/cell-pluginBuilder.j
 		out=client/src/bootstrap-tmp.js \
 		baseUrl=client/src includeRequire=true
 	cat client/src/bootstrap-tmp.js | $(uglifyjs) -nc > client/src/bootstrap.js
-	cat client/src/global.css \
-			client/src/bootstrap-tmp.css > client/src/bootstrap.css
+	mv client/src/bootstrap-tmp.css client/src/bootstrap.css
 	rm client/src/bootstrap-tmp.*
 
 #-------------------------------------------------------------------
@@ -42,7 +41,7 @@ server: $(coffee) $(connect) $(socketio) server.coffee
 	$(coffee) server.coffee
 
 dev-stylus: $(stylus)
-	cd client; find ./src ./mixins -name '*.styl' -type f | xargs ../$(stylus) --watch --compress
+	cd client; find ./src ./mixins -name '*.styl' -type f | xargs ../$(stylus) --include src/shared/styles --watch --compress
 
 dev-coffee: $(coffee)
 	find ./client/src ./client/spec ./server.coffee -name '*.coffee' -type f | xargs $(coffee) -c -b --watch
@@ -54,4 +53,4 @@ $(stylus) $(coffee) $(connect) $(uglifyjs) $(socketio):
 	npm install --dev
 
 clean: 
-	@@rm client/src/bootstrap.*
+	rm client/src/bootstrap.*

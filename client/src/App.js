@@ -1,4 +1,4 @@
-define([], function() {
+define(['Bus', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, ChatLog, StatusBar) {
   var socket;
   socket = io.connect();
   socket.on('news', function(data) {
@@ -9,7 +9,7 @@ define([], function() {
   });
   return {
     render: function(_) {
-      return ["Hellow"];
+      return [_(ChatLog), _(StatusBar), _('.arrow', '>'), _('input.chatInput')];
     }
   };
 });

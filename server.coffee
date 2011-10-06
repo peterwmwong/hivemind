@@ -11,9 +11,16 @@ server.use use for use in [
 server.listen port
 console.log "'serving #{path} on #{server.address().port}"
 
+
 io = require('socket.io').listen server
+
+io.configure ->
+  io.set 'log level', 1
+
 io.sockets.on 'connection', (socket)->
-  socket.emit 'news', hello: 'world'
+  socket.on k,v for k,v of do->
+    evt: ->
+    evt2: ->
   socket.on 'my other event', (data)->
     console.log data
     
