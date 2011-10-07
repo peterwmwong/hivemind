@@ -2,8 +2,10 @@ define(['Bus', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, ChatLog, StatusB
   var socket;
   socket = io.connect();
   socket.on('newChat', function(data) {
-    data.type = 'incomingChat';
-    return Bus.trigger(data);
+    return Bus.trigger((function() {
+      data.type = 'incomingChat';
+      return data;
+    })());
   });
   return {
     render: function(_) {
@@ -18,7 +20,15 @@ define(['Bus', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, ChatLog, StatusB
             msg: ($target = $(target)).val()
           };
           $target.val('');
-          return socket.emit('newChat', data);
+          try {
+            Bus.trigger({
+              type: 'newSelfChat',
+              msg: data.msg
+            });
+          } catch (_e) {}
+          try {
+            return socket.emit('newChat', data);
+          } catch (_e) {}
         }
       }
     }

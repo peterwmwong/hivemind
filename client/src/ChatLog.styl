@@ -1,13 +1,23 @@
 .ChatLog
 
-  margin 10px
+  overflow-x hidden
+  overflow-y scroll
 
   > .chat
-    margin 0 0 2px 0
+    padding 3px 5px 3px 5px
+
+    &.self
+      background-color #111
+      color #555
 
     > .from
       color #444
-      padding-right 10px
+      display inline-block
+      overflow hidden
+      margin-right 10px
+      white-space nowrap
+      width 80px
+      text-overflow ellipsis
 
     > .msg
       // blarg

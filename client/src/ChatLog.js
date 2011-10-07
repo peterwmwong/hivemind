@@ -3,18 +3,22 @@ define(['Bus'], function(Bus) {
   var _;
   _ = cell.prototype.$R;
   return {
-    renderIncomingChat: function(name, msg, uid) {
-      return this.$el.append((function() {
-        return _('.chat', _('span.from', uid), _('span.msg', msg));
+    renderChat: function(_arg) {
+      var msg, name, type, uid;
+      type = _arg.type, name = _arg.name, msg = _arg.msg, uid = _arg.uid;
+      this.$el.append((function() {
+        return _(".chat" + (type === 'newSelfChat' && '.self' || ''), _('span.from', uid), _('span.msg', msg));
       })());
+      return this.$el.scrollTop(999999);
     },
     afterRender: function() {
+      var handleChat;
+      handleChat = __bind(function(data) {
+        return data && this.renderChat(data);
+      }, this);
       return Bus.bind({
-        'incomingChat': __bind(function(_arg) {
-          var msg, name, uid;
-          msg = _arg.msg, uid = _arg.uid, name = _arg.name;
-          return msg && this.renderIncomingChat(name, msg, uid);
-        }, this)
+        incomingChat: handleChat,
+        newSelfChat: handleChat
       });
     }
   };

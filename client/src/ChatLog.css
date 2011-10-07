@@ -1,3 +1,4 @@
-.ChatLog{margin:10px;}
-.ChatLog > .chat{margin:0 0 2px 0;}
-.ChatLog > .chat > .from{color:#444;padding-right:10px}
+.ChatLog{overflow-x:hidden;overflow-y:scroll;}
+.ChatLog > .chat{padding:3px 5px 3px 5px;}
+.ChatLog > .chat.self{background-color:#111;color:#555}
+.ChatLog > .chat > .from{color:#444;display:inline-block;overflow:hidden;margin-right:10px;white-space:nowrap;width:80px;text-overflow:ellipsis}

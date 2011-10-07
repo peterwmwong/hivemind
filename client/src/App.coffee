@@ -6,8 +6,9 @@ define [
 
   socket = io.connect()
   socket.on 'newChat', (data)->
-    data.type = 'incomingChat'
-    Bus.trigger data
+    Bus.trigger do->
+      data.type = 'incomingChat'
+      data
     
   render: (_)-> [
     _ ChatLog
@@ -21,4 +22,5 @@ define [
       if which is 13
         data = msg: ($target = $(target)).val()
         $target.val ''
-        socket.emit 'newChat', data
+        try Bus.trigger {type: 'newSelfChat', msg: data.msg}
+        try socket.emit 'newChat', data
