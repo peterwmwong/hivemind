@@ -41,7 +41,7 @@ server: $(coffee) $(connect) $(socketio) server.coffee
 	$(coffee) server.coffee
 
 dev-stylus: $(stylus)
-	cd client; find ./src ./mixins -name '*.styl' -type f | xargs ../$(stylus) --include src/shared/styles --watch --compress
+	find ./client/src -name '*.styl' -type f | xargs $(stylus) --include client/src/shared/styles --watch --compress
 
 dev-coffee: $(coffee)
 	find ./client/src ./client/spec ./server.coffee -name '*.coffee' -type f | xargs $(coffee) -c -b --watch

@@ -5,9 +5,9 @@ define [
 ], (Bus,ChatLog,StatusBar)->
 
   socket = io.connect()
-  socket.on 'news', (data)->
-    console.log data
-    socket.emit 'my other event', my: 'data'
+  socket.on 'newChat', (data)->
+    data.type = 'incomingChat'
+    Bus.trigger data
     
   render: (_)-> [
     _ ChatLog
@@ -15,3 +15,10 @@ define [
     _ '.arrow', '>'
     _ 'input.chatInput'
   ]
+
+  on:
+    'keypress input.chatInput': ({which,target})->
+      if which is 13
+        data = msg: ($target = $(target)).val()
+        $target.val ''
+        socket.emit 'newChat', data

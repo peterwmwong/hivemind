@@ -1,0 +1,3 @@
+.ChatLog{margin:10px;}
+.ChatLog > .chat{margin:0 0 2px 0;}
+.ChatLog > .chat > .from{color:#444;padding-right:10px}

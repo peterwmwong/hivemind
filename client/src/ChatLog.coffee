@@ -1,9 +1,12 @@
 define ['Bus'], (Bus)->
   _ = cell::$R
 
-  renderIncomingChat: (msg)->
-    @$el.append _ '.chat', msg
+  renderIncomingChat: (name,msg,uid)->
+    @$el.append do->
+      _ '.chat',
+        _ 'span.from', uid
+        _ 'span.msg', msg
     
   afterRender: ->
-    Bus.bind 'incomingChat': ({data})=>
-      data.msg and renderIncomingChat data.msg
+    Bus.bind 'incomingChat': ({msg,uid,name})=>
+      msg and @renderIncomingChat name, msg, uid
