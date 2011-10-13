@@ -6,7 +6,7 @@ define [
 ], (Bus,Login,ChatLog,StatusBar)->
 
   init: ->
-    @socket = io.connect()
+    @socket = io.connect window.hivemind?.socketurl or "http://96.126.114.123:80"
     for event in ['chat','userLoggedIn','userLoggedOut']
       @socket.on event, do(event)-> (data)->
         Bus.trigger (data.type = event) and data

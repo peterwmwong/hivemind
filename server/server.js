@@ -19,7 +19,11 @@ chatBuffer = [];
 users = {};
 io = require('socket.io').listen(server);
 io.configure(function() {
-  return io.set('log level', 1);
+  io.enable('browser client minification');
+  io.enable('browser client etag');
+  io.enable('browser client gzip');
+  io.set('log level', 1);
+  return io.set('origins', '*:*');
 });
 io.sockets.on('connection', function(socket) {
   var ctx, event, handler, method, _j, _len2, _results;

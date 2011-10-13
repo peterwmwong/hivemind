@@ -2,12 +2,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['Bus', 'cell!Login', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, Login, ChatLog, StatusBar) {
   return {
     init: function() {
-      var event, _i, _len, _ref, _results;
-      this.socket = io.connect();
-      _ref = ['chat', 'userLoggedIn', 'userLoggedOut'];
+      var event, _i, _len, _ref, _ref2, _results;
+      this.socket = io.connect(((_ref = window.hivemind) != null ? _ref.socketurl : void 0) || "http://96.126.114.123:80");
+      _ref2 = ['chat', 'userLoggedIn', 'userLoggedOut'];
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        event = _ref[_i];
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        event = _ref2[_i];
         _results.push(this.socket.on(event, (function(event) {
           return function(data) {
             return Bus.trigger((data.type = event) && data);

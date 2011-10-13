@@ -18,7 +18,12 @@ chatBuffer = []
 users = {}
 
 io = require('socket.io').listen server
-io.configure -> io.set 'log level', 1
+io.configure ->
+  io.enable 'browser client minification'
+  io.enable 'browser client etag'
+  io.enable 'browser client gzip'
+  io.set 'log level', 1
+  io.set 'origins', '*:*'
 io.sockets.on 'connection', (socket)->
   ctx = {chatBuffer, users, socket}
   for handler in handlers
