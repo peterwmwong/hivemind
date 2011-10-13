@@ -1,4 +1,4 @@
-var connect, handlers, io, path, port, resolve, server, use, users, uuid, _i, _len, _ref;
+var BUF_MAX, buffer, connect, handlers, io, path, port, resolve, server, use, users, uuid, _i, _len, _ref;
 resolve = require('path').resolve;
 server = (connect = require('connect'))();
 uuid = require('node-uuid');
@@ -21,6 +21,8 @@ io = require('socket.io').listen(server);
 io.configure(function() {
   return io.set('log level', 1);
 });
+BUF_MAX = 100;
+buffer = [];
 handlers = (function() {
   var k, v, _ref2, _results;
   _ref2 = (function() {
@@ -29,12 +31,17 @@ handlers = (function() {
         return this.name = newName;
       },
       newChat: function(data) {
+        var overflow;
         console.log("newChat[" + this.uid + "]: " + (data != null ? data.msg : void 0));
-        return this.socket.broadcast.emit('newChat', {
+        buffer.push(data = {
           msg: data.msg,
           uid: this.uid,
           name: this.name
         });
+        if ((overflow = buffer.length - BUF_MAX) > 0) {
+          buffer.splice(0, overflow);
+        }
+        return this.socket.broadcast.emit('newChat', data);
       }
     };
   })();
@@ -51,7 +58,10 @@ io.sockets.on('connection', function(socket) {
     uid: uid,
     socket: socket
   };
-  socket.emit('uuid', uid);
+  socket.emit('init', {
+    uuid: uid,
+    msgs: buffer
+  });
   _results = [];
   for (_j = 0, _len2 = handlers.length; _j < _len2; _j++) {
     k = handlers[_j];

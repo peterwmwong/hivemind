@@ -6,7 +6,7 @@ define ['Bus'], (Bus)->
       _ ".chat#{type is 'newSelfChat' and '.self' or ''}",
         _ 'span.from', uid
         _ 'span.msg', msg
-    @$el.scrollTop 999999
+    $(window).scrollTop 999999
     
   afterRender: ->
     handleChat = (data)=>

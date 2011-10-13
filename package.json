@@ -1,9 +1,9 @@
 {
   "author": "Peter Wong <peter.wm.wong@gmail.com>",
-  "name": "tatotime.no.de-test",
+  "name": "hivemind",
   "version": "0.0.0",
   "repository": {
-    "url": ""
+    "url": "https://github.com/peterwmwong/hivemind"
   },
   "main": "server.js",
   "engines": {

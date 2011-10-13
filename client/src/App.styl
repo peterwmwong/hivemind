@@ -13,21 +13,33 @@ h1,h2,h3,h4,h5
   abspos 0px 0px 0px 0px
 
   > .ChatLog
-    abspos 0px 0px 66px 0px
+    width 100%
+    padding-bottom 66px
 
   > .StatusBar
-    abspos false 0px 32px 0px
+    z-index 3
+    position fixed
+    bottom 34px
+    width 100%
 
   > .arrow
-    abspos false 0px 0px 10px
+    z-index 2
+    position fixed
+    bottom 0px
+    left 10px
     color #555
     font-size 24px
+    line-height 33px
 
   > .chatInput
-    abspos false 0px 0px 30px
-    height 30px
+    position fixed
+    bottom 0
+    height 34px
+    width 100%
+    padding-left 30px
     outline none
     border none
-    background-color transparent
+    background-color #111
     color #BBB
     font-size 20px
+    margin-top 5px
