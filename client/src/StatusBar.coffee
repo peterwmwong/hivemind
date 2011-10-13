@@ -3,12 +3,21 @@ define ['Bus'], (Bus)->
 
   render: (_)-> [
     _ '.onlineUsers',
-      _ '.list',
-        for name in ['jkaplan','dlavin','pwong','rgerry','cmaroney']
-          _ 'span.user', name
+      _ '.list'
       _ '.label', 'online'
   ]
 
   afterRender: ->
-    Bus.bind 'user.logout': ({data})=>
-      @$('.list').append _ 'span.user', data
+    $list = @$ '.list'
+
+    Bus.bind
+      userLoggedIn: addUser = ({name})->
+        $list.append _ 'span.user', {'data-user': name}, name
+        
+      userLoggedOut: ({name})=>
+        @$(".list .user[data-user='#{name}']").remove()
+
+      loginSuccess: ({name,users})->
+        $list.html ''
+        addUser {name:n} for n in users when name isnt n
+          

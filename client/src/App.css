@@ -1,6 +1,7 @@
 body{font-family:Helvetica,Arial,sans-serif;background-color:#222;color:#888}
 h1,h2,h3,h4,h5{margin:0;padding:0}
 .App{position:absolute;top:0;right:0;bottom:0;left:0;}
+.App > .Login{z-index:4;position:fixed;position:absolute;top:0;right:0;bottom:0;left:0}
 .App > .ChatLog{width:100%;padding-bottom:66px}
 .App > .StatusBar{z-index:3;position:fixed;bottom:34px;width:100%}
 .App > .arrow{z-index:2;position:fixed;bottom:0;left:10px;color:#555;font-size:24px;line-height:33px}

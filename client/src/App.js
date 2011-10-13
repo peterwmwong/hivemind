@@ -1,46 +1,54 @@
-define(['Bus', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, ChatLog, StatusBar) {
-  var k, socket, v, _ref;
-  socket = io.connect();
-  _ref = (function() {
-    return {
-      init: function(_arg) {
-        var msgs, uuid;
-        uuid = _arg.uuid, msgs = _arg.msgs;
-        return console.log(uuid, msgs);
-      },
-      newChat: function(data) {
-        return Bus.trigger((function() {
-          data.type = 'incomingChat';
-          return data;
-        })());
-      }
-    };
-  })();
-  for (k in _ref) {
-    v = _ref[k];
-    socket.on(k, v);
-  }
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+define(['Bus', 'cell!Login', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, Login, ChatLog, StatusBar) {
   return {
+    init: function() {
+      var event, _i, _len, _ref, _results;
+      this.socket = io.connect();
+      _ref = ['chat', 'userLoggedIn', 'userLoggedOut'];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        event = _ref[_i];
+        _results.push(this.socket.on(event, (function(event) {
+          return function(data) {
+            return Bus.trigger((data.type = event) && data);
+          };
+        })(event)));
+      }
+      return _results;
+    },
     render: function(_) {
-      return [_(ChatLog), _(StatusBar), _('.arrow', '>'), _('input.chatInput')];
+      return [
+        _(Login, {
+          onLogin: __bind(function(name) {
+            return this.socket.emit('login', (Bus.set({
+              username: name
+            })) || name, __bind(function(data) {
+              if (!data.error) {
+                this.$('.Login').toggle(false);
+                return Bus.trigger((data.type = 'loginSuccess') && data);
+              } else {
+                return Bus.trigger('loginFail');
+              }
+            }, this));
+          }, this)
+        }), _(ChatLog), _(StatusBar), _('.arrow', '>'), _('input.chatInput')
+      ];
     },
     on: {
       'keypress input.chatInput': function(_arg) {
         var $target, data, target, which;
         which = _arg.which, target = _arg.target;
-        if (which === 13 && (data = {
-          msg: ($target = $(target)).val()
-        }).msg) {
-          $target.val('');
-          try {
-            Bus.trigger({
-              type: 'newSelfChat',
-              msg: data.msg
-            });
-          } catch (_e) {}
-          try {
-            return socket.emit('newChat', data);
-          } catch (_e) {}
+        if (Bus.username) {
+          if (which === 13 && (data = {
+            msg: ($target = $(target)).val()
+          }).msg) {
+            $target.val('');
+            try {
+              return this.socket.emit('chat', (data.name = Bus.username) && data, function(ok) {
+                return Bus.trigger((data.type = 'chatSent') && data);
+              });
+            } catch (_e) {}
+          }
         }
       }
     }

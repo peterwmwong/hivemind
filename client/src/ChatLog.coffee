@@ -1,16 +1,21 @@
 define ['Bus'], (Bus)->
   _ = cell::$R
 
-  renderChat: ({type,name,msg,uid})->
+  renderChat: ({name,msg})->
     @$el.append do->
-      _ ".chat#{type is 'newSelfChat' and '.self' or ''}",
-        _ 'span.from', uid
+      _ ".chat#{Bus.username is name and '.self' or ''}",
+        _ 'span.from', name
         _ 'span.msg', msg
-    $(window).scrollTop 999999
+    $(window).scrollTop 999999 #TODO There's gota be a better way...
     
   afterRender: ->
-    handleChat = (data)=>
-      data and @renderChat data
     Bus.bind
-      incomingChat: handleChat
-      newSelfChat: handleChat
+      loginSuccess: ({chats})=>
+        if chats
+          @renderChat msg for msg in chats
+
+      chat: (data)=>
+        data and @renderChat data
+      
+      chatSent: ({msg})=>
+        msg and @renderChat name: Bus.username, msg: msg

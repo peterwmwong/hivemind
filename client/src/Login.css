@@ -1,0 +1,6 @@
+.Login{background-color:#000;padding:20% 0 0 50px;box-sizing:content-box;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;}
+.Login > .greet{color:#999;margin:0 0 5px 2px;}
+.Login > .greet > span{color:#fff;font-style:italic}
+.Login > .inputGroup > *{border:none;padding:5px 8px 5px 8px;background-color:#333;color:#ddd}
+.Login > .inputGroup > .submit{-moz-border-radius-topleft:2px;-moz-border-radius-topright:2px;-moz-border-radius-bottomright:2px;-moz-border-radius-bottomleft:2px;border-top-left-radius:2px;border-top-right-radius:2px;border-bottom-right-radius:2px;border-bottom-left-radius:2px;}
+.Login > .inputGroup > .submit:hover{background-color:#555;color:#fff;cursor:pointer}

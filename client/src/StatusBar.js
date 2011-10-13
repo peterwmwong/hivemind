@@ -4,27 +4,39 @@ define(['Bus'], function(Bus) {
   _ = cell.prototype.$R;
   return {
     render: function(_) {
-      var name;
-      return [
-        _('.onlineUsers', _('.list', (function() {
-          var _i, _len, _ref, _results;
-          _ref = ['jkaplan', 'dlavin', 'pwong', 'rgerry', 'cmaroney'];
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            name = _ref[_i];
-            _results.push(_('span.user', name));
-          }
-          return _results;
-        })()), _('.label', 'online'))
-      ];
+      return [_('.onlineUsers', _('.list'), _('.label', 'online'))];
     },
     afterRender: function() {
+      var $list, addUser;
+      $list = this.$('.list');
       return Bus.bind({
-        'user.logout': __bind(function(_arg) {
-          var data;
-          data = _arg.data;
-          return this.$('.list').append(_('span.user', data));
-        }, this)
+        userLoggedIn: addUser = function(_arg) {
+          var name;
+          name = _arg.name;
+          return $list.append(_('span.user', {
+            'data-user': name
+          }, name));
+        },
+        userLoggedOut: __bind(function(_arg) {
+          var name;
+          name = _arg.name;
+          return this.$(".list .user[data-user='" + name + "']").remove();
+        }, this),
+        loginSuccess: function(_arg) {
+          var n, name, users, _i, _len, _results;
+          name = _arg.name, users = _arg.users;
+          $list.html('');
+          _results = [];
+          for (_i = 0, _len = users.length; _i < _len; _i++) {
+            n = users[_i];
+            if (name !== n) {
+              _results.push(addUser({
+                name: n
+              }));
+            }
+          }
+          return _results;
+        }
       });
     }
   };
