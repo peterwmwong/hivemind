@@ -18,13 +18,20 @@ chatBuffer = []
 users = {}
 
 io = require('socket.io').listen server
-io.configure ->
-  io.enable 'browser client minification'
-  io.enable 'browser client etag'
-  io.enable 'browser client gzip'
-  io.set 'log level', 1
-  io.set 'origins', '*:*'
+io.enable 'browser client minification'
+io.enable 'browser client etag'
+io.enable 'browser client gzip'
+io.set 'log level', 3
+io.set 'origins', '*:*'
+io.set 'transports', [
+  'websocket'
+  'flashsocket'
+  'htmlfile'
+  'xhr-polling'
+  'jsonp-polling'
+]
 io.sockets.on 'connection', (socket)->
+  socket.emit 'connect', 'yo'
   ctx = {chatBuffer, users, socket}
   for handler in handlers
     for event, method of handler.on

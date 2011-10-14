@@ -18,15 +18,15 @@ console.log("'serving " + path + " on " + (server.address().port));
 chatBuffer = [];
 users = {};
 io = require('socket.io').listen(server);
-io.configure(function() {
-  io.enable('browser client minification');
-  io.enable('browser client etag');
-  io.enable('browser client gzip');
-  io.set('log level', 1);
-  return io.set('origins', '*:*');
-});
+io.enable('browser client minification');
+io.enable('browser client etag');
+io.enable('browser client gzip');
+io.set('log level', 3);
+io.set('origins', '*:*');
+io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
 io.sockets.on('connection', function(socket) {
   var ctx, event, handler, method, _j, _len2, _results;
+  socket.emit('connect', 'yo');
   ctx = {
     chatBuffer: chatBuffer,
     users: users,
