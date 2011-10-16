@@ -1,4 +1,5 @@
 var doLogin;
+var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 define({
   render: function(_) {
     return [
@@ -11,7 +12,10 @@ define({
     ];
   },
   afterRender: function() {
-    return this.$inputName = this.$('input.name');
+    this.$inputName = this.$('input.name');
+    return setTimeout((__bind(function() {
+      return this.$inputName.focus();
+    }, this)), 0);
   },
   on: {
     'click input.submit': doLogin = function() {

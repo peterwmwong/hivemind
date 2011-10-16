@@ -6,7 +6,7 @@ define ['Bus'], (Bus)->
       _ ".chat#{Bus.username is name and '.self' or ''}",
         _ 'span.from', name
         _ 'span.msg', msg
-    $(window).scrollTop 999999 #TODO There's gota be a better way...
+    $(window).scrollTop @$el.height() #TODO There's gota be a better way...
     
   afterRender: ->
     Bus.bind

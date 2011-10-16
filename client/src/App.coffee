@@ -13,9 +13,10 @@ define [
 
   render: (_)-> [
     _ Login, onLogin: (name)=>
-        @socket.emit 'login', ((Bus.set username: name) or name), (data)=>
+        @socket.emit 'login', (Bus.set username: name) or name, (data)=>
           if not data.error
             @$('.Login').toggle false
+            @$('input.chatInput').focus()
             Bus.trigger (data.type = 'loginSuccess') and data
           else
             Bus.trigger 'loginFail'
@@ -31,7 +32,6 @@ define [
         if which is 13 and (data = msg: ($target = $(target)).val()).msg
           $target.val ''
           try
-            @socket.emit 'chat',
-              (data.name = Bus.username) and data,
+            @socket.emit 'chat', (data.name = Bus.username) and data,
               (ok)-> Bus.trigger (data.type = 'chatSent') and data
 

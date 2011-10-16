@@ -9,7 +9,7 @@ define(['Bus'], function(Bus) {
       this.$el.append((function() {
         return _(".chat" + (Bus.username === name && '.self' || ''), _('span.from', name), _('span.msg', msg));
       })());
-      return $(window).scrollTop(999999);
+      return $(window).scrollTop(this.$el.height());
     },
     afterRender: function() {
       return Bus.bind({

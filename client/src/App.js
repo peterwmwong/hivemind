@@ -25,6 +25,7 @@ define(['Bus', 'cell!Login', 'cell!ChatLog', 'cell!StatusBar'], function(Bus, Lo
             })) || name, __bind(function(data) {
               if (!data.error) {
                 this.$('.Login').toggle(false);
+                this.$('input.chatInput').focus();
                 return Bus.trigger((data.type = 'loginSuccess') && data);
               } else {
                 return Bus.trigger('loginFail');

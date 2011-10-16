@@ -10,7 +10,9 @@ define
       _ 'input.submit', type: 'button', value: 'Login'
   ]
 
-  afterRender: -> @$inputName = @$ 'input.name'
+  afterRender: ->
+    @$inputName = @$ 'input.name'
+    setTimeout (=> @$inputName.focus()), 0
 
   on:
     'click input.submit': doLogin = ->
