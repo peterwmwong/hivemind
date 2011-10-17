@@ -66,7 +66,7 @@ define(function() {
         }
       }
     };
-    Model.prototype.bindAndCall = function(binds) {
+    Model.prototype.onAndCall = function(binds) {
       var handler, self, type, _fn;
       self = this;
       _fn = function(handler) {
@@ -83,14 +83,19 @@ define(function() {
           rebinders = [];
           _fn2 = function(i) {
             rebinders[i] = function(pev) {
-              for( var j=i, obj=pev.cur, pobj=pev.prev, parentObj = pev.model;
-                     j++<lastPropIndex;
-                     obj = (parentObj = obj) && obj[props[j]], pobj = pobj && pobj[props[j]] ){
-                if( obj instanceof Model ){
-                  rebind(j,obj);
+              var ev, j, parentObj, pobj;
+              j = i;
+              obj = pev.cur;
+              pobj = pev.prev;
+              parentObj = pev.model;
+              while (j++ < lastPropIndex) {
+                if (obj instanceof Model) {
+                  rebind(j, obj);
                 }
-              };
-              var ev;
+                parentObj = obj;
+                obj = obj != null ? obj[props[j]] : void 0;
+                pobj = pobj != null ? pobj[props[j]] : void 0;
+              }
               ev = {
                 cur: obj,
                 prev: pobj,
@@ -138,7 +143,7 @@ define(function() {
         _fn(handler);
       }
     };
-    Model.prototype.bind = function(binds) {
+    Model.prototype.on = function(binds) {
       var bind, handler, obj, p, props, type, v, _base, _i, _len, _ref, _ref2;
       for (type in binds) {
         handler = binds[type];
@@ -160,7 +165,7 @@ define(function() {
         unshiftIfNotPresent(((_ref2 = (_base = this._ls)[type]) != null ? _ref2 : _base[type] = []), handler);
       }
     };
-    Model.prototype.unbind = function(binds) {
+    Model.prototype.off = function(binds) {
       var handler, i, l, ls, type, _len, _results;
       _results = [];
       for (type in binds) {

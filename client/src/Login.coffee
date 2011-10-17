@@ -1,4 +1,7 @@
-define
+define [
+  'AppModel'
+  'Bus'
+], (AppModel,Bus)->
 
   render: (_)-> [
     _ '.greet',
@@ -17,7 +20,9 @@ define
   on:
     'click input.submit': doLogin = ->
       if name = @$inputName.val()
-        @options.onLogin name
+        Bus.emit 'login', name, (data)=>
+          if not data.error
+            AppModel.set username: name
+            AppModel.trigger (data.type = 'login') and data
 
-    'keypress input.name': ({which})->
-      if which is 13 then doLogin.call this
+    'keypress input.name': ({which})-> doLogin.call this if which is 13

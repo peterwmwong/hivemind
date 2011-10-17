@@ -43,7 +43,7 @@ define ->
           try l event
       return
     
-    bindAndCall: (binds)->
+    onAndCall: (binds)->
       self = this
       for type,handler of binds then do(handler)->
 
@@ -59,13 +59,15 @@ define ->
           rebinders = []
           for p,i in props then do(i)->
             rebinders[i] = (pev)->
-              `for( var j=i, obj=pev.cur, pobj=pev.prev, parentObj = pev.model;
-                     j++<lastPropIndex;
-                     obj = (parentObj = obj) && obj[props[j]], pobj = pobj && pobj[props[j]] ){
-                if( obj instanceof Model ){
-                  rebind(j,obj);
-                }
-              }`
+              j = i
+              obj = pev.cur
+              pobj = pev.prev
+              parentObj = pev.model
+              while j++<lastPropIndex
+                rebind j, obj if obj instanceof Model
+                parentObj = obj
+                obj = obj?[props[j]]
+                pobj = pobj?[props[j]]
 
               ev =
                 cur: obj
@@ -97,7 +99,7 @@ define ->
           try handler type: type, model: self
       return
 
-    bind: (binds)->
+    on: (binds)->
       for type,handler of binds
         if props = parsePropChange type
           obj = this
@@ -109,7 +111,7 @@ define ->
 
       return
 
-    unbind: (binds)->
+    off: (binds)->
       for type,handler of binds
         if ls = @_ls[type]
           for l,i in ls when l is handler

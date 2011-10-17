@@ -1,28 +1,16 @@
 var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-define(['Bus'], function(Bus) {
+define(['AppModel', 'Bus'], function(AppModel, Bus) {
   var _;
   _ = cell.prototype.$R;
   return {
-    render: function(_) {
+    render: function() {
       return [_('.onlineUsers', _('.list'), _('.label', 'online'))];
     },
     afterRender: function() {
-      var $list, addUser;
+      var $list, event, fn, _ref, _results;
       $list = this.$('.list');
-      return Bus.bind({
-        userLoggedIn: addUser = function(_arg) {
-          var name;
-          name = _arg.name;
-          return $list.append(_('span.user', {
-            'data-user': name
-          }, name));
-        },
-        userLoggedOut: __bind(function(_arg) {
-          var name;
-          name = _arg.name;
-          return this.$(".list .user[data-user='" + name + "']").remove();
-        }, this),
-        loginSuccess: function(_arg) {
+      AppModel.on({
+        login: function(_arg) {
           var n, name, users, _i, _len, _results;
           name = _arg.name, users = _arg.users;
           $list.html('');
@@ -38,6 +26,29 @@ define(['Bus'], function(Bus) {
           return _results;
         }
       });
+      _ref = (function() {
+        var addUser;
+        return {
+          userLoggedIn: addUser = function(_arg) {
+            var name;
+            name = _arg.name;
+            return $list.append(_('span.user', {
+              'data-user': name
+            }, name));
+          },
+          userLoggedOut: __bind(function(_arg) {
+            var name;
+            name = _arg.name;
+            return this.$(".list .user[data-user='" + name + "']").remove();
+          }, this)
+        };
+      })();
+      _results = [];
+      for (event in _ref) {
+        fn = _ref[event];
+        _results.push(Bus.on(event, fn));
+      }
+      return _results;
     }
   };
 });

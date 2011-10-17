@@ -1,21 +1,24 @@
-define ['Bus'], (Bus)->
+define [
+  'AppModel'
+  'Bus'
+], (AppModel, Bus)->
   _ = cell::$R
 
-  renderChat: ({name,msg})->
+  renderChat: ({name,msg,date})->
     @$el.append do->
-      _ ".chat#{Bus.username is name and '.self' or ''}",
+      _ ".chat#{AppModel.username is name and '.self' or ''}",
+        _ 'span.datetime', new Date(date).toLocaleTimeString()
         _ 'span.from', name
         _ 'span.msg', msg
-    $(window).scrollTop @$el.height() #TODO There's gota be a better way...
+    $(window).scrollTop @$el.height()
     
   afterRender: ->
-    Bus.bind
-      loginSuccess: ({chats})=>
-        if chats
-          @renderChat msg for msg in chats
+    AppModel.on
+      login: ({chats})=>
+        @renderChat msg for msg in chats if chats
+      newChat: (data)=>
+        @renderChat data if data
+      logout: => @$el.html ''
 
-      chat: (data)=>
-        data and @renderChat data
-      
-      chatSent: ({msg})=>
-        msg and @renderChat name: Bus.username, msg: msg
+    Bus.on 'chat', (data)=>
+      @renderChat data if data

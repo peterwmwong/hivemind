@@ -1,37 +1,41 @@
 define [
+  'AppModel'
   'Bus'
   'cell!Login'
   'cell!ChatLog'
   'cell!StatusBar'
-], (Bus,Login,ChatLog,StatusBar)->
-
-  init: ->
-    @socket = io.connect window.hivemind?.socketurl or "http://96.126.114.123:80"
-    for event in ['chat','userLoggedIn','userLoggedOut']
-      @socket.on event, do(event)-> (data)->
-        Bus.trigger (data.type = event) and data
+], (AppModel,Bus,Login,ChatLog,StatusBar)->
 
   render: (_)-> [
-    _ Login, onLogin: (name)=>
-        @socket.emit 'login', (Bus.set username: name) or name, (data)=>
-          if not data.error
-            @$('.Login').toggle false
-            @$('input.chatInput').focus()
-            Bus.trigger (data.type = 'loginSuccess') and data
-          else
-            Bus.trigger 'loginFail'
+    _ Login
     _ ChatLog
     _ StatusBar
-    _ '.arrow', '>'
-    _ 'input.chatInput'
+    _ '.wrapForFF_see_579776',
+      _ '#chatInputGroup',
+          _ 'p.arrow', '>'
+          _ 'input#chatInput'
   ]
 
-  on:
-    'keypress input.chatInput': ({which,target})->
-      if Bus.username
-        if which is 13 and (data = msg: ($target = $(target)).val()).msg
-          $target.val ''
-          try
-            @socket.emit 'chat', (data.name = Bus.username) and data,
-              (ok)-> Bus.trigger (data.type = 'chatSent') and data
+  afterRender: ->
+    @$input = @$ '#chatInput'
 
+    AppModel.on
+      login: ({name})=>
+        @$('.Login').toggle false
+        @$('.arrow').html "#{name} >"
+        setTimeout (=>@$input.focus()), 0
+      logout: =>
+        @$('.Login').toggle true
+
+  on:
+    'keypress #chatInput': ({which})->
+      if AppModel.username
+        data =
+          msg: @$input.val()
+          name: AppModel.username
+        if which is 13 and data.msg
+          @$input.val ''
+          Bus.emit 'chat', data, ({error,date})->
+            data.type = 'newChat'
+            data.date = date
+            AppModel.trigger data

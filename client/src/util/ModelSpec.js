@@ -1,22 +1,28 @@
-define(['SpecHelpers', './Model'], function(_arg, Model) {
+define(['SpecHelpers'], function(_arg) {
   var spyOnAll;
   spyOnAll = _arg.spyOnAll;
-  return describe('Model', function() {
-    var initObj, model;
-    model = null;
-    initObj = {
-      a: 'A',
-      b: 2,
-      c: {},
-      d: (function() {}),
-      e: new Model({
-        f: new Model({
-          g: 3
-        })
-      })
-    };
+  return function(_arg2) {
+    var Model, initObj, loadModule, model;
+    loadModule = _arg2.loadModule;
+    Model = void 0;
+    model = void 0;
+    initObj = void 0;
     beforeEach(function() {
-      return model = new Model(initObj);
+      return loadModule(function(module) {
+        Model = module;
+        initObj = {
+          a: 'A',
+          b: 2,
+          c: {},
+          d: (function() {}),
+          e: new Model({
+            f: new Model({
+              g: 3
+            })
+          })
+        };
+        return model = new Model(initObj);
+      });
     });
     describe('Model.pathObj', function() {
       var itPaths, m;
@@ -61,7 +67,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         }
       }, ['a', 'b', 'c'], 3);
     });
-    describe("new Model(" + (JSON.stringify(initObj)) + ")", function() {
+    describe("new Model(/*{object}*/)", function() {
       return it("copies key/values from object passed into constructor", function() {
         var k, v, _results;
         _results = [];
@@ -72,25 +78,25 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         return _results;
       });
     });
-    describe(".bind({'test': <func>})", function() {
+    describe(".on({'test': <func>})", function() {
       return it("calls <func> once when .trigger('test') called", function() {
         var binds, mHandler;
         mHandler = spyOn((binds = {
           test: function() {}
         }), 'test');
-        model.bind(binds);
+        model.on(binds);
         model.trigger('test');
         return expect(mHandler.callCount).toBe(1);
       });
     });
-    describe(".bindAndCall({'test': <func>})", function() {
+    describe(".onAndCall({'test': <func>})", function() {
       return it("calls <func> when handler is set AND once whenever .trigger('test') is called", function() {
         var mBinds, mHandler;
         mBinds = {
           test: (function() {})
         };
         mHandler = spyOn(mBinds, 'test');
-        model.bindAndCall(mBinds);
+        model.onAndCall(mBinds);
         expect(mHandler.callCount).toBe(1);
         expect(mHandler.argsForCall[0][0]).toEqual({
           model: model,
@@ -104,13 +110,13 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         });
       });
     });
-    describe(".bindAndCall({'change:a': <func>})", function() {
+    describe(".onAndCall({'change:a': <func>})", function() {
       return it("calls <func> when handler is set AND once whenever .set({a:<new value>) is called", function() {
         var mBinds, mHandler;
         mHandler = spyOn((mBinds = {
           'change:a': (function() {})
         }), 'change:a');
-        model.bindAndCall(mBinds);
+        model.onAndCall(mBinds);
         expect(mHandler.callCount).toBe(1);
         expect(mHandler.argsForCall[0][0]).toEqual({
           cur: 'A',
@@ -131,7 +137,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         });
       });
     });
-    describe(".bindAndCall({'change:a.b.c': <func>})", function() {
+    describe(".onAndCall({'change:a.b.c': <func>})", function() {
       describe("handles nested properties initially undefined set to bindable values (instanceof Model)", function() {
         var hChild, hParent, hRoot, resetSpies;
         hRoot = void 0;
@@ -148,7 +154,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         };
         beforeEach(function() {
           var _ref;
-          return model.bindAndCall((_ref = spyOnAll({
+          return model.onAndCall((_ref = spyOnAll({
             'change:root': function() {},
             'change:root.parent': function() {},
             'change:root.parent.child': function() {}
@@ -224,7 +230,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
       });
       return it("calls <func> when handler is set AND once whenever .set({a:<new value>}) is called", function() {
         var hE, hEF, hEFG, newe, newf, olde, oldf, parentEvent, _ref;
-        model.bindAndCall((_ref = spyOnAll({
+        model.onAndCall((_ref = spyOnAll({
           'change:e': function() {},
           'change:e.f': function() {},
           'change:e.f.g': function() {}
@@ -323,21 +329,21 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         });
       });
     });
-    describe(".unbind({'test': <func>})", function() {
+    describe(".off({'test': <func>})", function() {
       return it("does no longer calls <func> whenever .trigger('test') called", function() {
         var mBinds;
         mBinds = {
           test: (function() {})
         };
         spyOn(mBinds, 'test');
-        model.bind(mBinds);
+        model.on(mBinds);
         model.trigger('test');
         expect(mBinds.test.callCount).toBe(1);
         expect(mBinds.test).toHaveBeenCalledWith({
           model: model,
           type: 'test'
         });
-        model.unbind({
+        model.off({
           'test': mBinds.test
         });
         model.trigger('test');
@@ -356,7 +362,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
           binds = {};
           binds[b = "change:a.b.c"] = function() {};
           spyOn(binds, b);
-          model.bindAndCall(binds);
+          model.onAndCall(binds);
           model.a.b.set({
             c: 'B'
           }, eventData = {
@@ -383,7 +389,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
             binds[b = "change:" + p] = function() {};
             spyOn(binds, b);
           }
-          model.bind(binds);
+          model.on(binds);
           model.set({
             a: 'B',
             b: 3
@@ -418,7 +424,7 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
             binds[b = "change:" + p] = function() {};
             spyOn(binds, b);
           }
-          model.bind(binds);
+          model.on(binds);
           model.set({
             a: 'B',
             b: 3
@@ -442,5 +448,5 @@ define(['SpecHelpers', './Model'], function(_arg, Model) {
         });
       });
     });
-  });
+  };
 });

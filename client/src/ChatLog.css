@@ -1,3 +1,8 @@
-.ChatLog > .chat{padding:5px 5px 2px 5px;}
-.ChatLog > .chat.self{background-color:#111;color:#555}
-.ChatLog > .chat > .from{color:#444;display:inline-block;overflow:hidden;margin-right:10px;white-space:nowrap;width:80px;text-overflow:ellipsis}
+.ChatLog{font-size:18px;}
+.ChatLog > .chat{padding:2px 5px 2px 5px;color:#ddd;display:box;display:-webkit-box;display:-moz-box;-webkit-box-orient:horizontal;-moz-box-orient:horizontal;width:100%;}
+.ChatLog > .chat.self{color:#666;}
+.ChatLog > .chat.self > .from{color:#444}
+.ChatLog > .chat > .datetime{min-width:80px;color:#444;margin:0 10px 0 2px;font-size:12px}
+.ChatLog > .chat > .from{color:#888;font-weight:bold;overflow:hidden;margin-right:10px;white-space:nowrap;text-overflow:ellipsis;}
+.ChatLog > .chat > .from::after{content:":";font-weight:normal}
+.ChatLog > .chat > .msg{box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;word-wrap:break-word}

@@ -1,17 +1,19 @@
-define [
-  'SpecHelpers'
-  './Model'
-], ({spyOnAll},Model)->
+define ['SpecHelpers'], ({spyOnAll})->
+  ({loadModule})->
+    Model = undefined
+    model = undefined
+    initObj = undefined
 
-  describe 'Model', ->
-    model = null
-    initObj =
-      a: 'A'
-      b: 2
-      c: {}
-      d: (->)
-      e: new Model {f: new Model {g:3} }
-    beforeEach -> model = new Model initObj
+    beforeEach ->
+      loadModule (module)->
+        Model = module
+        initObj =
+          a: 'A'
+          b: 2
+          c: {}
+          d: (->)
+          e: new Model {f: new Model {g:3} }
+        model = new Model initObj
 
     describe 'Model.pathObj', ->
       itPaths = (o,path,expected)->
@@ -26,26 +28,26 @@ define [
       itPaths {a:{b: m = {c:3}}}, ['a','b'], m
       itPaths {a:{b:{c:3}}}, ['a','b','c'], 3
 
-    describe "new Model(#{JSON.stringify initObj})", ->
+    describe "new Model(/*{object}*/)", ->
       it "copies key/values from object passed into constructor", ->
         for k,v of initObj
           expect(model[k]).toBe v
     
 
-    describe ".bind({'test': <func>})", ->
+    describe ".on({'test': <func>})", ->
       it "calls <func> once when .trigger('test') called", ->
         mHandler = spyOn (binds = test:->), 'test'
-        model.bind binds
+        model.on binds
         model.trigger 'test'
         expect(mHandler.callCount).toBe 1
 
 
-    describe ".bindAndCall({'test': <func>})", ->
+    describe ".onAndCall({'test': <func>})", ->
       it "calls <func> when handler is set AND once whenever .trigger('test') is called", ->
         mBinds = test: (->)
         mHandler = spyOn mBinds, 'test'
 
-        model.bindAndCall mBinds
+        model.onAndCall mBinds
 
         expect(mHandler.callCount).toBe 1
         expect(mHandler.argsForCall[0][0]).toEqual
@@ -59,11 +61,11 @@ define [
           type: 'test'
     
 
-    describe ".bindAndCall({'change:a': <func>})", ->
+    describe ".onAndCall({'change:a': <func>})", ->
       it "calls <func> when handler is set AND once whenever .set({a:<new value>) is called", ->
         mHandler = spyOn (mBinds = 'change:a': (->)), 'change:a'
 
-        model.bindAndCall mBinds
+        model.onAndCall mBinds
 
         expect(mHandler.callCount).toBe 1
         expect(mHandler.argsForCall[0][0]).toEqual
@@ -82,7 +84,7 @@ define [
           type: 'change:a'
 
 
-    describe ".bindAndCall({'change:a.b.c': <func>})", ->
+    describe ".onAndCall({'change:a.b.c': <func>})", ->
       
       describe "handles nested properties initially undefined set to bindable values (instanceof Model)", ->
         hRoot = undefined
@@ -94,7 +96,7 @@ define [
           hChild?.reset()
 
         beforeEach ->
-          model.bindAndCall {'change:root':hRoot,'change:root.parent':hParent,'change:root.parent.child':hChild} =
+          model.onAndCall {'change:root':hRoot,'change:root.parent':hParent,'change:root.parent.child':hChild} =
             spyOnAll
               'change:root': ->
               'change:root.parent': ->
@@ -152,7 +154,7 @@ define [
           expect(hChild.argsForCall[1][0].cur).toBe 6
 
       it "calls <func> when handler is set AND once whenever .set({a:<new value>}) is called", ->
-        model.bindAndCall {'change:e':hE,'change:e.f':hEF,'change:e.f.g':hEFG} = spyOnAll
+        model.onAndCall {'change:e':hE,'change:e.f':hEF,'change:e.f.g':hEFG} = spyOnAll
           'change:e': ->
           'change:e.f': ->
           'change:e.f.g': ->
@@ -243,19 +245,19 @@ define [
           model: model.e.f
           type: 'change:g'
 
-    describe ".unbind({'test': <func>})", ->
+    describe ".off({'test': <func>})", ->
       it "does no longer calls <func> whenever .trigger('test') called", ->
         mBinds = test: (->)
         spyOn mBinds, 'test'
 
-        model.bind mBinds
+        model.on mBinds
         model.trigger 'test'
         expect(mBinds.test.callCount).toBe 1
         expect(mBinds.test).toHaveBeenCalledWith
           model: model
           type: 'test'
         
-        model.unbind 'test': mBinds.test
+        model.off 'test': mBinds.test
         model.trigger 'test'
         expect(mBinds.test.callCount).toBe 1
 
@@ -271,7 +273,7 @@ define [
           binds = {}
           binds[b = "change:a.b.c"] = ->
           spyOn binds, b
-          model.bindAndCall binds
+          model.onAndCall binds
 
           model.a.b.set {c:'B'}, eventData = {event:'data'}
 
@@ -290,7 +292,7 @@ define [
           for p in ['a','b','c','d']
             binds[b = "change:#{p}"] = ->
             spyOn binds, b
-          model.bind binds
+          model.on binds
           
           model.set {a:'B',b:3}, eventData = {event:'data'}
 
@@ -316,7 +318,7 @@ define [
           for p in ['a','b','c','d']
             binds[b = "change:#{p}"] = ->
             spyOn binds, b
-          model.bind binds
+          model.on binds
           
           model.set a: 'B', b: 3
 
