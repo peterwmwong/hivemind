@@ -13,7 +13,8 @@ define [
     _ '.wrapForFF_see_579776',
       _ '#chatInputGroup',
           _ 'p.arrow', '>'
-          _ 'input#chatInput'
+          _ '.wrapper',
+            _ 'input#chatInput'
   ]
 
   afterRender: ->

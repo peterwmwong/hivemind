@@ -2,7 +2,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 define(['AppModel', 'Bus', 'cell!Login', 'cell!ChatLog', 'cell!StatusBar'], function(AppModel, Bus, Login, ChatLog, StatusBar) {
   return {
     render: function(_) {
-      return [_(Login), _(ChatLog), _(StatusBar), _('.wrapForFF_see_579776', _('#chatInputGroup', _('p.arrow', '>'), _('input#chatInput')))];
+      return [_(Login), _(ChatLog), _(StatusBar), _('.wrapForFF_see_579776', _('#chatInputGroup', _('p.arrow', '>'), _('.wrapper', _('input#chatInput'))))];
     },
     afterRender: function() {
       this.$input = this.$('#chatInput');

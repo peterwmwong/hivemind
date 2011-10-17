@@ -7,9 +7,9 @@ define [
   renderChat: ({name,msg,date})->
     @$el.append do->
       _ ".chat#{AppModel.username is name and '.self' or ''}",
-        _ 'span.datetime', new Date(date).toLocaleTimeString()
-        _ 'span.from', name
-        _ 'span.msg', msg
+        _ 'p.datetime', new Date(date).toLocaleTimeString()
+        _ 'p.from', name
+        _ '.msg', msg
     $(window).scrollTop @$el.height()
     
   afterRender: ->

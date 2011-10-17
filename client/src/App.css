@@ -7,4 +7,5 @@ h1,h2,h3,h4,h5{margin:0;padding:0}
 .App > .wrapForFF_see_579776{position:fixed;bottom:0;height:34px;width:100%;}
 .App > .wrapForFF_see_579776 > #chatInputGroup{background-color:#111;display:box;display:-webkit-box;display:-moz-box;-webkit-box-orient:horizontal;-moz-box-orient:horizontal;color:#bbb;font-size:20px;line-height:34px;width:100%;}
 .App > .wrapForFF_see_579776 > #chatInputGroup > .arrow{color:#666;font-weight:bold;margin:0 5px 0 10px}
-.App > .wrapForFF_see_579776 > #chatInputGroup > #chatInput{box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;margin:0;background-color:#111;border:none;color:#bbb;font-size:20px;outline:none;width:100%}
+.App > .wrapForFF_see_579776 > #chatInputGroup > .wrapper{box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;}
+.App > .wrapForFF_see_579776 > #chatInputGroup > .wrapper > #chatInput{margin:0;background-color:#111;border:none;color:#bbb;font-size:20px;outline:none;width:100%}

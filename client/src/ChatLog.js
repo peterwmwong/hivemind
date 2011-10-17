@@ -7,7 +7,7 @@ define(['AppModel', 'Bus'], function(AppModel, Bus) {
       var date, msg, name;
       name = _arg.name, msg = _arg.msg, date = _arg.date;
       this.$el.append((function() {
-        return _(".chat" + (AppModel.username === name && '.self' || ''), _('span.datetime', new Date(date).toLocaleTimeString()), _('span.from', name), _('span.msg', msg));
+        return _(".chat" + (AppModel.username === name && '.self' || ''), _('p.datetime', new Date(date).toLocaleTimeString()), _('p.from', name), _('.msg', msg));
       })());
       return $(window).scrollTop(this.$el.height());
     },
