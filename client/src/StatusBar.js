@@ -7,8 +7,15 @@ define(['AppModel', 'Bus'], function(AppModel, Bus) {
       return [_('.onlineUsers', _('.list'), _('.label', 'online'))];
     },
     afterRender: function() {
-      var $list, event, fn, _ref, _results;
+      var $list, addUser, event, fn, _ref, _results;
       $list = this.$('.list');
+      addUser = function(_arg) {
+        var name;
+        name = _arg.name;
+        return $list.append(_('span.user', {
+          'data-user': name
+        }, name));
+      };
       AppModel.on({
         login: function(_arg) {
           var n, name, users, _i, _len, _results;
@@ -27,15 +34,8 @@ define(['AppModel', 'Bus'], function(AppModel, Bus) {
         }
       });
       _ref = (function() {
-        var addUser;
         return {
-          userLoggedIn: addUser = function(_arg) {
-            var name;
-            name = _arg.name;
-            return $list.append(_('span.user', {
-              'data-user': name
-            }, name));
-          },
+          userLoggedIn: addUser,
           userLoggedOut: __bind(function(_arg) {
             var name;
             name = _arg.name;
